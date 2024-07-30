@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -19,7 +20,7 @@ public class Task {
     private TaskStatus status;
     private String authorId;
     private String assigneeId;
-    Set<String> observerIds;
+    Set<String> observerIds = new HashSet<>();
 
     public void addObservers(String id) {
         observerIds.add(id);

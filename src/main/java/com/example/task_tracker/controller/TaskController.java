@@ -3,12 +3,19 @@ package com.example.task_tracker.controller;
 import com.example.task_tracker.dto.TaskResponse;
 import com.example.task_tracker.mapper.TaskMapper;
 import com.example.task_tracker.model.Task;
+import com.example.task_tracker.model.User;
+import com.example.task_tracker.repository.UserRepository;
 import com.example.task_tracker.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,12 +27,15 @@ public class TaskController {
 
     @GetMapping
     public Flux<TaskResponse> getAllTasks() {
-        return taskMapper.fromTaskFluxToTaskResponse(taskService.findAll());
+        return taskService.findAll()
+                .map(taskMapper::taskMapper);
     }
 
     @GetMapping("/{id}")
     public Mono<ResponseEntity<TaskResponse>> getById(@PathVariable String id) {
-        return taskMapper.fromTaskToResponse(taskService.findById(id))
+        return taskService
+                .findById(id)
+                .map(taskMapper::taskMapper)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
@@ -42,6 +52,7 @@ public class TaskController {
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
+
     @PutMapping("/addObserver")
     public Mono<ResponseEntity<Task>> addObserver(@RequestParam String userId, @RequestParam String taskId) {
         return taskService.addObserver(userId, taskId)
