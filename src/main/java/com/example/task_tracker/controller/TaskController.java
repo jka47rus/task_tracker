@@ -28,7 +28,7 @@ public class TaskController {
     @GetMapping
     public Flux<TaskResponse> getAllTasks() {
         return taskService.findAll()
-                .map(taskMapper::taskMapper);
+                .flatMap(task -> Flux.just(taskMapper.taskMapper(task)));
     }
 
     @GetMapping("/{id}")
