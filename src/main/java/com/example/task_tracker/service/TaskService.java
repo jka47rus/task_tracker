@@ -44,7 +44,7 @@ public class TaskService {
     public Mono<Task> addObserver(String userId, String taskId) {
         if (userService.findById(userId) == null) return null;
         return findById(taskId).flatMap(task -> {
-            task.addObservers(userId);
+            task.addObserverId(userId);
             taskRepository.save(task);
             return taskRepository.save(task);
         });
