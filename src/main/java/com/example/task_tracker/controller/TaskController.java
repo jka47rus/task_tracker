@@ -20,12 +20,15 @@ public class TaskController {
 
     @GetMapping
     public Flux<TaskResponse> getAllTasks() {
-        return taskMapper.fromTaskFluxToTaskResponse(taskService.findAll());
+        return taskService.findAll()
+                .flatMap(task -> taskMapper.map(task).flux());
     }
 
     @GetMapping("/{id}")
     public Mono<ResponseEntity<TaskResponse>> getById(@PathVariable String id) {
-        return taskMapper.fromTaskToResponse(taskService.findById(id))
+        return taskService
+                .findById(id)
+                .flatMap(taskMapper::map)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
@@ -42,6 +45,7 @@ public class TaskController {
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
+
     @PutMapping("/addObserver")
     public Mono<ResponseEntity<Task>> addObserver(@RequestParam String userId, @RequestParam String taskId) {
         return taskService.addObserver(userId, taskId)
