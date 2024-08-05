@@ -23,7 +23,7 @@ public class TaskResponse {
 
     private User author;
     private User assignee;
-    Set<User> observers;
+    private Set<User> observers;
 
 
 }

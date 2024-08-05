@@ -1,11 +1,4 @@
 spring:
-  date:
+  data:
     mongodb:
       uri: mongodb://root:root@localhost:27017/appdatabase?authSource=admin
-#  server: 8080
-#      username: root
-#      password: root
-#      host: localhost
-#      port: 27017
-#      database: mongosh
-#      authentication-database: admin

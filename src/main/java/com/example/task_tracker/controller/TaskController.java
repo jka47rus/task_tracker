@@ -31,7 +31,7 @@ public class TaskController {
     }
 
     @PostMapping
-    public Mono<ResponseEntity<Task>> createUser(@RequestBody Task task) {
+    public Mono<ResponseEntity<Task>> createTask(@RequestBody Task task) {
         return taskService.save(task)
                 .map(ResponseEntity::ok);
     }
@@ -42,6 +42,7 @@ public class TaskController {
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
+
     @PutMapping("/addObserver")
     public Mono<ResponseEntity<Task>> addObserver(@RequestParam String userId, @RequestParam String taskId) {
         return taskService.addObserver(userId, taskId)
