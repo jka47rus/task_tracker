@@ -1,8 +1,10 @@
 package com.example.task_tracker.service;
 
+import com.example.task_tracker.model.RoleType;
 import com.example.task_tracker.model.User;
 import com.example.task_tracker.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
@@ -14,6 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Flux<User> findAll() {
         return userRepository.findAll();
@@ -23,8 +26,11 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public Mono<User> save(User user) {
+    public Mono<User> save(User user, RoleType roleType) {
         user.setId(UUID.randomUUID().toString());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.addRole(roleType);
+
         return userRepository.save(user);
     }
 
@@ -40,5 +46,9 @@ public class UserService {
         return userRepository.deleteById(id);
     }
 
+
+    public Mono<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
 
 }

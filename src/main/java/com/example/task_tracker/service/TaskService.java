@@ -1,6 +1,7 @@
 package com.example.task_tracker.service;
 
 import com.example.task_tracker.model.Task;
+import com.example.task_tracker.model.User;
 import com.example.task_tracker.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,13 +42,18 @@ public class TaskService {
         });
     }
 
-    public Mono<Task> addObserver(String userId, String taskId) {
-        if (userService.findById(userId) == null) return null;
-        return findById(taskId).flatMap(task -> {
-            task.addObservers(userId);
-            taskRepository.save(task);
-            return taskRepository.save(task);
-        });
+    public Mono<Task> addObserver(String userName, String taskId) {
+
+        Mono<Task> taskMono = findById(taskId).zipWith(userService.findByUsername(userName))
+                .map(tuple -> {
+                    Task task = tuple.getT1();
+                    User user = tuple.getT2();
+
+                    task.addObservers(user.getId());
+                    return task;
+                });
+
+        return taskMono.flatMap(taskRepository::save);
     }
 
     public Mono<Void> deleteById(String id) {

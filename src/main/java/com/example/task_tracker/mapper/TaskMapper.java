@@ -39,14 +39,12 @@ public class TaskMapper {
                         .updateAt(task.getUpdateAt())
                         .authorId(task.getAuthorId())
                         .status(task.getStatus())
-                        .observerIds(task.getObserverIds())
                         .assigneeId(task.getAssigneeId())
                         .observerIds(task.getObserverIds())
                         .observers(new HashSet<>(value.getT1()))
                         .author(value.getT2())
                         .assignee(value.getT3())
                         .build()
-
         );
 
 
